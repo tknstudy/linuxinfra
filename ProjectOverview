@@ -1,0 +1,462 @@
+# MailSec Lab – Project Status Dump
+
+**Date:** July 2026
+
+---
+
+# Current Stable Baseline
+
+## Operating System
+
+* Rocky Linux 9.7
+
+---
+
+# Infrastructure Framework
+
+Current Stable Version
+
+```
+LinuxInfra v0.7.2
+```
+
+Status
+
+```
+Stable
+```
+
+Validated on:
+
+* Infrastructure VM
+* Repository VM
+* Mail1 VM
+
+All builds completed successfully.
+
+---
+
+# Repo Framework
+
+Current Version
+
+```
+RepoInfra v1.1
+```
+
+Status
+
+```
+Stable
+```
+
+Validated on:
+
+* Repository VM
+
+Functions
+
+* Local RPM Repository
+* Docker Image Cache
+* Python Package Cache
+* Squid Package Cache
+* Repository Publishing
+
+---
+
+# Versions Retired
+
+The following versions are intentionally retired and should not be used as a baseline.
+
+```
+LinuxInfra v0.8
+Status : Discarded
+
+Reason
+
+AWK parsing issues
+Role preview failures
+Multiple regressions
+```
+
+```
+LinuxInfra v0.9
+
+Status : Discarded
+
+Reason
+
+Built on unstable v0.8 codebase.
+```
+
+Future development continues from LinuxInfra v0.7.2.
+
+---
+
+# VM Inventory
+
+## Infrastructure
+
+```
+infra.corp.local
+```
+
+Role
+
+Infrastructure Server
+
+---
+
+## Repository
+
+```
+repo.corp.local
+```
+
+IP
+
+```
+192.168.10.10
+```
+
+Purpose
+
+Software Distribution Server
+
+---
+
+## Internal Mail
+
+```
+mail1.internal.local
+```
+
+Purpose
+
+Internal Mailcow
+
+---
+
+## External Mail
+
+```
+mail2.external.local
+```
+
+Purpose
+
+External Mailcow
+
+---
+
+## Proxy
+
+```
+proxy.corp.local
+```
+
+Purpose
+
+Traffic Analysis
+
+---
+
+## Cloud
+
+```
+cloud.corp.local
+```
+
+Purpose
+
+Cloud Connector
+
+---
+
+# Repository Layout
+
+```
+/srv/repo
+
+images/
+
+manifests/
+
+rpms/
+    base/
+    python/
+    squid/
+```
+
+Repository metadata exists in each RPM folder.
+
+---
+
+# Apache Publishing
+
+Repository published through Apache Alias configuration.
+
+Current aliases
+
+```
+/rpms
+/images
+/manifests
+```
+
+Commands used
+
+```
+sudo tee /etc/httpd/conf.d/linuxinfra-repo.conf
+
+sudo chmod -R a+rX /srv/repo
+
+sudo restorecon -Rv /srv/repo
+
+sudo systemctl restart httpd
+```
+
+---
+
+# Repo Client
+
+Current tool
+
+```
+use-local-repo.sh
+```
+
+Purpose
+
+Converts a Rocky Linux VM into a repository client.
+
+Functions
+
+* Backup repo files
+* Disable public repositories
+* Configure local repository
+* Refresh DNF
+* Verify repository
+
+Used before LinuxInfra on client VMs.
+
+---
+
+# Build Sequence
+
+Current build order
+
+1 Repository VM
+
+2 LinuxInfra
+
+3 Verify
+
+4 Snapshot
+
+5 RepoInfra
+
+6 Apache Publish
+
+7 Client Repository Configuration
+
+8 Mail1
+
+9 Verify
+
+10 Snapshot
+
+11 Mail2
+
+12 Proxy
+
+13 Cloud
+
+---
+
+# Snapshots
+
+Repository VM
+
+Snapshot after
+
+LinuxInfra
+
+Snapshot after
+
+RepoInfra
+
+Mail1
+
+Snapshot after
+
+LinuxInfra
+
+Mail2
+
+Snapshot after
+
+LinuxInfra
+
+---
+
+# Validation Completed
+
+LinuxInfra
+
+PASS
+
+RepoInfra
+
+PASS
+
+Repository Client
+
+PASS
+
+Mail1 Build
+
+PASS
+
+Local Repository
+
+PASS
+
+Stage 4 download performance improved significantly when using the local repository.
+
+---
+
+# Current Repository Contents
+
+RPM
+
+Base packages
+
+Python packages
+
+Squid packages
+
+Docker
+
+Graylog
+
+Mongo
+
+Redis
+
+Nginx
+
+OpenSearch
+
+Busybox
+
+Alpine
+
+Rocky Linux
+
+Registry
+
+Manifest
+
+cache-manifest.csv
+
+---
+
+# Known Improvements
+
+RepoInfra v1.2
+
+* EPEL integration
+* Update mode
+* Incremental RPM download
+* Incremental Docker image refresh
+* Better progress reporting
+* Better summary
+
+LinuxInfra
+
+* Improve stage progress
+* Show activity during long-running package operations
+* Reduce harmless warning noise
+
+---
+
+# Project Design Principles
+
+Infrastructure first.
+
+Applications second.
+
+Everything reproducible.
+
+Everything script driven.
+
+Every server starts from a clean Rocky Linux installation.
+
+Snapshots are taken after each validated milestone.
+
+Repository VM is built first.
+
+All remaining servers use the Repository VM for package installation.
+
+Every build is verified before moving to the next phase.
+
+---
+
+# Future Components
+
+ProxyInfra
+
+GraylogInfra
+
+MailcowInfra
+
+CloudInfra
+
+Repository Update Mode
+
+AI Email Analysis
+
+Traffic Analysis
+
+Documentation
+
+Build Guide
+
+Operations Runbook
+
+Administrator Guide
+
+Architecture Guide
+
+---
+
+# Current Stable Releases
+
+LinuxInfra
+
+```
+v0.7.2
+```
+
+RepoInfra
+
+```
+v1.1
+```
+
+Repository Client
+
+```
+v1.0
+```
+
+Operating System
+
+```
+Rocky Linux 9.7
+```
+
+---
+
+End of Status Dump
