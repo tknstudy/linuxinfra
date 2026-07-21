@@ -80,6 +80,14 @@ perl-Git = 2.52.0-1.el9
 [root@repo demo]#
 
 
+# nano /var/log/repoinfra/mailcow-annex-fix/20260722-022017/missing-deps.txt
+/var/log/repoinfra/mailcow-annex-fix/20260722-022017/missing-deps.txt   Modified
+
+git-core = 2.52.0-1.el9
+git-core-doc = 2.52.0-1.el9
+perl-Git = 2.52.0-1.el9
+
+
 
 
 
