@@ -58,6 +58,30 @@ at REPO:
 
 
 
+========== 7) Summary ==========
+Status counts:
+  PASS : 7
+  WARN : 1
+  FAIL : 0
+Elapsed: 12 seconds
+Log    : /var/log/repoinfra/mailcow-annex-fix/20260722-021212/detail.log
+Report : /var/log/repoinfra/mailcow-annex-fix/20260722-021212/report.txt
+Missing: /var/log/repoinfra/mailcow-annex-fix/20260722-021212/missing-deps.txt
+[WARN] Missing dependency items remain. Review /var/log/repoinfra/mailcow-annex-fix/20260722-021212/missing-deps.txt
+
+Next client refresh steps:
+  sudo dnf clean all
+  sudo dnf makecache
+  sudo dnf install -y git
+[root@repo demo]# cat  /var/log/repoinfra/mailcow-annex-fix/20260722-021212/missing-deps.txt
+git-core = 2.52.0-1.el9
+git-core-doc = 2.52.0-1.el9
+perl-Git = 2.52.0-1.el9
+[root@repo demo]#
+
+
+
+
 
 
 
