@@ -33,4 +33,34 @@ perl(strict)
 perl(warnings)
 perl-Git = 2.52.0-1.el9
 [root@mail1 mailcow]#
+at mail1: 
+[root@mail1 mailcow]# dnf list available 'git*'
+Last metadata expiration check: 0:15:23 ago on Wed 22 Jul 2026 01:34:58 AM IST.
+Available Packages
+git.x86_64                     2.52.0-1.el9                      linuxinfra-base
+[root@mail1 mailcow]# dnf list available 'perl*' | grep -E 'Git|Term|ReadKey|lib'
+Error: No matching Packages to list
+[root@mail1 mailcow]# dnf list available 'perl*'
+Last metadata expiration check: 0:16:26 ago on Wed 22 Jul 2026 01:34:58 AM IST.
+Error: No matching Packages to list
+[root@mail1 mailcow]#
+
+
+at REPO:
+[root@repo demo]# find /srv/repo/rpms -name "git*.rpm"
+/srv/repo/rpms/base/git-2.52.0-1.el9.x86_64.rpm
+/srv/repo/rpms/mailcow/git-2.52.0-1.el9.x86_64.rpm
+[root@repo demo]# find /srv/repo/rpms -name "git-core*.rpm"
+[root@repo demo]# find /srv/repo/rpms -name "perl-Git*.rpm"
+[root@repo demo]# find /srv/repo/rpms -name "perl-Term-ReadKey*.rpm"
+[root@repo demo]#
+
+
+
+
+
+
+
+
+
 
