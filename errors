@@ -9,3 +9,28 @@ Error:
   - nothing provides git-core-doc = 2.52.0-1.el9 needed by git-2.52.0-1.el9.x86_64 from linuxinfra-base
   - nothing provides perl-Git = 2.52.0-1.el9 needed by git-2.52.0-1.el9.x86_64 from linuxinfra-base
 (try to add '--skip-broken' to skip uninstallable packages or '--nobest' to use not only best candidate packages)
+
+[root@mail1 mailcow]# dnf repolist --enabled
+repo id                             repo name
+docker-ce-stable                    Docker CE Stable - x86_64
+linuxinfra-base                     LinuxInfra Base RPMs
+linuxinfra-python                   LinuxInfra Python RPMs
+[root@mail1 mailcow]# dnf repoquery --requires git
+Last metadata expiration check: 0:11:40 ago on Wed 22 Jul 2026 01:34:58 AM IST.
+/usr/bin/perl
+/usr/bin/sh
+git-core = 2.52.0-1.el9
+git-core-doc = 2.52.0-1.el9
+perl(:VERSION) >= 5.26.0
+perl(File::Basename)
+perl(File::Spec)
+perl(Getopt::Long)
+perl(Git)
+perl(IPC::Open2)
+perl(Term::ReadKey)
+perl(lib)
+perl(strict)
+perl(warnings)
+perl-Git = 2.52.0-1.el9
+[root@mail1 mailcow]#
+
