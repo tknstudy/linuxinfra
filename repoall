@@ -1,0 +1,15 @@
+sudo tee /etc/httpd/conf.d/linuxinfra-repo.conf >/dev/null <<'EOF'
+Alias /rpms /srv/repo/rpms
+Alias /images /srv/repo/images
+Alias /manifests /srv/repo/manifests
+
+<Directory "/srv/repo">
+    Options Indexes FollowSymLinks
+    AllowOverride None
+    Require all granted
+</Directory>
+EOF
+
+sudo chmod -R a+rX /srv/repo
+sudo restorecon -Rv /srv/repo
+sudo systemctl restart httpd
