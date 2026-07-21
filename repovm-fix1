@@ -1,0 +1,65 @@
+```bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+trap 'echo "[ERR] Failed at line $LINENO: $BASH_COMMAND" >&2' ERR
+
+REPO_ROOT="/srv/repo/rpms"
+TARGET_DIR="${REPO_ROOT}/mailcow-fix"
+LOG_DIR="/var/log/repoinfra/mailcow-annex-fix"
+TS="$(date +%Y%m%d-%H%M%S)"
+LOG_FILE="${LOG_DIR}/annex-erro-fix-${TS}.log"
+
+mkdir -p "$TARGET_DIR" "$LOG_DIR"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+echo "[INFO] Log file: $LOG_FILE"
+echo "[INFO] Starting mailcow repo repair on $(hostname -f 2>/dev/null || hostname)"
+
+if [[ $EUID -ne 0 ]]; then
+  echo "[FAIL] Run this script as root." >&2
+  exit 1
+fi
+
+if [[ ! -d "$REPO_ROOT" ]]; then
+  echo "[FAIL] Repo root not found: $REPO_ROOT" >&2
+  exit 1
+fi
+
+echo "[INFO] Checking required tools..."
+missing_tools=()
+for tool in dnf createrepo_c reposync; do
+  command -v "$tool" >/dev/null 2>&1 || missing_tools+=("$tool")
+done
+
+if (( ${#missing_tools[@]} > 0 )); then
+  echo "[INFO] Installing missing tools: ${missing_tools[*]}"
+  dnf install -y dnf-plugins-core createrepo_c
+fi
+
+echo "[INFO] Current repo state for git:"
+dnf repoquery --requires git || true
+
+echo "[INFO] Downloading git and dependencies into: $TARGET_DIR"
+dnf download --resolve --destdir "$TARGET_DIR" git
+
+echo "[INFO] Repo RPM count before metadata refresh:"
+find "$REPO_ROOT" -name '*.rpm' | wc -l
+
+echo "[INFO] Rebuilding repository metadata..."
+createrepo_c --update "$REPO_ROOT"
+
+echo "[INFO] Restoring SELinux context..."
+restorecon -Rv /srv/repo || true
+
+echo "[INFO] Restarting Apache..."
+systemctl restart httpd
+
+echo "[INFO] Verifying git RPMs now exist:"
+find "$REPO_ROOT" -name 'git*.rpm' -o -name 'perl*.rpm' | sort
+
+echo "[INFO] Repair completed successfully."
+echo "[INFO] Refresh the client metadata with:"
+echo "       sudo dnf clean all && sudo dnf makecache"
+echo "       sudo dnf install -y git"
+```
