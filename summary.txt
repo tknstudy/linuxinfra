@@ -1,0 +1,17 @@
+RepoInfra Mailcow Repository Rebuild v1.1.1
+Run ID: 20260724-015140-6151
+Overall status: FAIL
+PASS: 13
+WARN: 0
+FAIL: 3
+Elapsed: 389 seconds
+Rocky source: https://dl.rockylinux.org/pub/rocky/9
+Target Git version-release: 2.52.0-1.el9
+Rocky key fingerprint: 21CB256AE16FC54C6E652949702D426D350D275D
+Canonical repo: /srv/repo/rpms/mailcow
+Detail log: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/detail.log
+Report: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/report.txt
+Package manifest: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/package-manifest.tsv
+Closure report: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/repoclosure.txt
+Client repo file: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/linuxinfra-mailcow.repo
+Rollback status: not-needed

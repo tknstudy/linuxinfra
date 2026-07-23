@@ -1,0 +1,5 @@
+name	version_release	arch	repo
+git	2.52.0-1.el9	x86_64	repoinfra-rocky-appstream
+git-core	2.52.0-1.el9	x86_64	repoinfra-rocky-appstream
+git-core-doc	2.52.0-1.el9	noarch	repoinfra-rocky-appstream
+perl-Git	2.52.0-1.el9	noarch	repoinfra-rocky-appstream

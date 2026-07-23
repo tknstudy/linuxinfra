@@ -1,0 +1,405 @@
+
+============================================================
+ RepoInfra Mailcow Repository Rebuild v1.1.1
+ Purpose : repair and build a complete Mailcow prerequisite RPM repo
+ Method  : exact Git alignment + isolated Rocky sources + full closure
+ Source  : Rocky release selection '9'
+ Run ID  : 20260724-015140-6151
+ Log     : /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/detail.log
+============================================================
+
+========== 1) Platform, lock, disk, and source preflight ==========
+[2026-07-24 01:51:40] PASS  Supported builder detected: rocky 9.8 (x86_64)
+[2026-07-24 01:51:40] INFO  SELinux mode: Enforcing
+[2026-07-24 01:51:40] INFO  staging filesystem free space: 58957 MiB (minimum 2048 MiB)
+[2026-07-24 01:51:40] PASS  staging filesystem has sufficient free space
+[2026-07-24 01:51:40] INFO  repository filesystem free space: 58957 MiB (minimum 2048 MiB)
+[2026-07-24 01:51:40] PASS  repository filesystem has sufficient free space
+[2026-07-24 01:51:40] STEP  Testing isolated Rocky BaseOS, AppStream, and CRB source: https://dl.rockylinux.org/pub/rocky/9
+[2026-07-24 01:52:56] PASS  Selected and refreshed Rocky source: https://dl.rockylinux.org/pub/rocky/9
+[2026-07-24 01:52:56] STEP  Installing missing Repo VM build tools: createrepo_c httpd
+RepoInfra Rocky BaseOS source                   1.2 kB/s | 4.3 kB     00:03    
+RepoInfra Rocky AppStream source                1.3 kB/s | 4.7 kB     00:03    
+RepoInfra Rocky CRB source                      1.3 kB/s | 4.7 kB     00:03    
+Dependencies resolved.
+================================================================================
+ Package            Arch    Version            Repository                  Size
+================================================================================
+Installing:
+ createrepo_c       x86_64  0.20.1-4.el9       repoinfra-rocky-appstream   71 k
+ httpd              x86_64  2.4.62-13.el9_8.5  repoinfra-rocky-appstream   46 k
+Installing dependencies:
+ apr                x86_64  1.7.0-12.el9_3     repoinfra-rocky-appstream  122 k
+ apr-util           x86_64  1.6.1-23.el9       repoinfra-rocky-appstream   94 k
+ apr-util-bdb       x86_64  1.6.1-23.el9       repoinfra-rocky-appstream   12 k
+ createrepo_c-libs  x86_64  0.20.1-4.el9       repoinfra-rocky-appstream   98 k
+ httpd-core         x86_64  2.4.62-13.el9_8.5  repoinfra-rocky-appstream  1.4 M
+ httpd-filesystem   noarch  2.4.62-13.el9_8.5  repoinfra-rocky-appstream   13 k
+ httpd-tools        x86_64  2.4.62-13.el9_8.5  repoinfra-rocky-appstream   80 k
+ rocky-logos-httpd  noarch  90.17-1.el9        repoinfra-rocky-appstream   24 k
+
+Transaction Summary
+================================================================================
+Install  10 Packages
+
+Total download size: 1.9 M
+Installed size: 5.9 M
+Downloading Packages:
+(1/10): apr-util-1.6.1-23.el9.x86_64.rpm         25 kB/s |  94 kB     00:03    
+(2/10): apr-1.7.0-12.el9_3.x86_64.rpm            31 kB/s | 122 kB     00:03    
+(3/10): apr-util-bdb-1.6.1-23.el9.x86_64.rpm    3.0 kB/s |  12 kB     00:03    
+(4/10): createrepo_c-0.20.1-4.el9.x86_64.rpm    255 kB/s |  71 kB     00:00    
+(5/10): createrepo_c-libs-0.20.1-4.el9.x86_64.r 136 kB/s |  98 kB     00:00    
+(6/10): httpd-2.4.62-13.el9_8.5.x86_64.rpm       60 kB/s |  46 kB     00:00    
+(7/10): httpd-core-2.4.62-13.el9_8.5.x86_64.rpm 1.6 MB/s | 1.4 MB     00:00    
+(8/10): httpd-filesystem-2.4.62-13.el9_8.5.noar  44 kB/s |  13 kB     00:00    
+(9/10): httpd-tools-2.4.62-13.el9_8.5.x86_64.rp 310 kB/s |  80 kB     00:00    
+(10/10): rocky-logos-httpd-90.17-1.el9.noarch.r  34 kB/s |  24 kB     00:00    
+--------------------------------------------------------------------------------
+Total                                           349 kB/s | 1.9 MB     00:05     
+Running transaction check
+Transaction check succeeded.
+Running transaction test
+Transaction test succeeded.
+Running transaction
+  Preparing        :                                                        1/1 
+  Installing       : apr-1.7.0-12.el9_3.x86_64                             1/10 
+  Installing       : apr-util-bdb-1.6.1-23.el9.x86_64                      2/10 
+  Installing       : apr-util-1.6.1-23.el9.x86_64                          3/10 
+  Installing       : httpd-tools-2.4.62-13.el9_8.5.x86_64                  4/10 
+  Installing       : rocky-logos-httpd-90.17-1.el9.noarch                  5/10 
+  Running scriptlet: httpd-filesystem-2.4.62-13.el9_8.5.noarch             6/10 
+  Installing       : httpd-filesystem-2.4.62-13.el9_8.5.noarch             6/10 
+  Installing       : httpd-core-2.4.62-13.el9_8.5.x86_64                   7/10 
+  Installing       : createrepo_c-libs-0.20.1-4.el9.x86_64                 8/10 
+  Installing       : createrepo_c-0.20.1-4.el9.x86_64                      9/10 
+  Installing       : httpd-2.4.62-13.el9_8.5.x86_64                       10/10 
+  Running scriptlet: httpd-2.4.62-13.el9_8.5.x86_64                       10/10 
+  Verifying        : apr-1.7.0-12.el9_3.x86_64                             1/10 
+  Verifying        : apr-util-1.6.1-23.el9.x86_64                          2/10 
+  Verifying        : apr-util-bdb-1.6.1-23.el9.x86_64                      3/10 
+  Verifying        : createrepo_c-0.20.1-4.el9.x86_64                      4/10 
+  Verifying        : createrepo_c-libs-0.20.1-4.el9.x86_64                 5/10 
+  Verifying        : httpd-2.4.62-13.el9_8.5.x86_64                        6/10 
+  Verifying        : httpd-core-2.4.62-13.el9_8.5.x86_64                   7/10 
+  Verifying        : httpd-filesystem-2.4.62-13.el9_8.5.noarch             8/10 
+  Verifying        : httpd-tools-2.4.62-13.el9_8.5.x86_64                  9/10 
+  Verifying        : rocky-logos-httpd-90.17-1.el9.noarch                 10/10 
+
+Installed:
+  apr-1.7.0-12.el9_3.x86_64                                                     
+  apr-util-1.6.1-23.el9.x86_64                                                  
+  apr-util-bdb-1.6.1-23.el9.x86_64                                              
+  createrepo_c-0.20.1-4.el9.x86_64                                              
+  createrepo_c-libs-0.20.1-4.el9.x86_64                                         
+  httpd-2.4.62-13.el9_8.5.x86_64                                                
+  httpd-core-2.4.62-13.el9_8.5.x86_64                                           
+  httpd-filesystem-2.4.62-13.el9_8.5.noarch                                     
+  httpd-tools-2.4.62-13.el9_8.5.x86_64                                          
+  rocky-logos-httpd-90.17-1.el9.noarch                                          
+
+Complete!
+[2026-07-24 01:53:16] PASS  Missing build tools installed
+[2026-07-24 01:53:16] INFO  Mailcow-required packages (8): git openssl curl gawk coreutils grep jq ca-certificates
+[2026-07-24 01:53:16] INFO  RepoInfra support packages (6): patch net-tools tar gzip unzip dnf-plugins-core
+[2026-07-24 01:53:16] PASS  Loaded 14 unique top-level package specifications
+[2026-07-24 01:53:16] PASS  1) Platform, lock, disk, and source preflight completed in 96 seconds
+
+========== 2) Exact Git alignment and source package plan ==========
+[2026-07-24 01:53:29] PASS  No local Git RPM found; selected source Git version: 2.52.0-1.el9
+[2026-07-24 01:53:41] INFO  Source match: git-2.52.0-1.el9.x86_64 (repoinfra-rocky-appstream)
+[2026-07-24 01:53:55] INFO  Source match: git-core-2.52.0-1.el9.x86_64 (repoinfra-rocky-appstream)
+[2026-07-24 01:54:07] INFO  Source match: git-core-doc-2.52.0-1.el9.noarch (repoinfra-rocky-appstream)
+[2026-07-24 01:54:19] INFO  Source match: perl-Git-2.52.0-1.el9.noarch (repoinfra-rocky-appstream)
+[2026-07-24 01:54:19] PASS  The source contains an exact, coherent Git component set for 2.52.0-1.el9
+ca-certificates	0:2025.2.80_v9.0.305-91.el9	noarch	repoinfra-rocky-baseos
+coreutils	0:8.32-41.el9_8	x86_64	repoinfra-rocky-baseos
+curl	0:7.76.1-40.el9	x86_64	repoinfra-rocky-baseos
+dnf-plugins-core	0:4.3.0-26.el9	noarch	repoinfra-rocky-baseos
+gawk	0:5.1.0-6.el9	x86_64	repoinfra-rocky-baseos
+grep	0:3.6-5.el9	x86_64	repoinfra-rocky-baseos
+gzip	0:1.12-1.el9	x86_64	repoinfra-rocky-baseos
+jq	0:1.6-19.el9_8.2	i686	repoinfra-rocky-baseos
+jq	0:1.6-19.el9_8.2	x86_64	repoinfra-rocky-baseos
+net-tools	0:2.0-0.64.20160912git.el9	x86_64	repoinfra-rocky-baseos
+openssl	1:3.5.5-5.el9_8	x86_64	repoinfra-rocky-baseos
+patch	0:2.7.6-16.el9	x86_64	repoinfra-rocky-appstream
+tar	2:1.34-11.el9	x86_64	repoinfra-rocky-baseos
+unzip	0:6.0-60.el9_8	x86_64	repoinfra-rocky-baseos
+[2026-07-24 01:57:03] PASS  Every non-Git top-level prerequisite is available from the selected source
+[2026-07-24 01:57:03] PASS  2) Exact Git alignment and source package plan completed in 227 seconds
+
+========== 3) Full dependency-closure download ==========
+[2026-07-24 01:57:03] STEP  Downloading full hard-dependency closure into /var/tmp/repoinfra-mailcow-repo-rebuild/20260724-015140-6151/rpms
+[2026-07-24 01:57:03] INFO  DNF progress below may be quiet while it calculates the dependency transaction
+RepoInfra Rocky BaseOS source                   932  B/s | 4.3 kB     00:04    
+RepoInfra Rocky AppStream source                1.3 kB/s | 4.7 kB     00:03    
+RepoInfra Rocky CRB source                      1.3 kB/s | 4.7 kB     00:03    
+(1/243): libselinux-3.6-3.el9.x86_64.rpm         22 kB/s |  85 kB     00:03    
+(2/243): libsigsegv-2.13-4.el9.x86_64.rpm        32 kB/s |  26 kB     00:00    
+(3/243): libsmartcols-2.37.4-25.el9.x86_64.rpm  284 kB/s |  61 kB     00:00    
+(4/243): libsemanage-3.6-5.el9_6.x86_64.rpm      24 kB/s | 117 kB     00:04    
+(5/243): libsepol-3.6-3.el9.x86_64.rpm           62 kB/s | 329 kB     00:05    
+(6/243): glibc-minimal-langpack-2.34-274.el9_8.  47 kB/s |  27 kB     00:00    
+(7/243): libsolv-0.7.24-6.el9_8.x86_64.rpm      687 kB/s | 402 kB     00:00    
+(8/243): libssh-0.10.4-18.el9.x86_64.rpm        641 kB/s | 214 kB     00:00    
+(9/243): libssh-config-0.10.4-18.el9.noarch.rpm  59 kB/s | 8.2 kB     00:00    
+(10/243): gmp-6.2.0-13.el9.x86_64.rpm           328 kB/s | 314 kB     00:00    
+(11/243): patch-2.7.6-16.el9.x86_64.rpm         141 kB/s | 127 kB     00:00    
+(12/243): acl-2.4.0-1.el9_8.x86_64.rpm          134 kB/s |  74 kB     00:00    
+(13/243): gpgme-1.15.1-6.el9.x86_64.rpm         272 kB/s | 206 kB     00:00    
+(14/243): alternatives-1.24-2.el9.x86_64.rpm     78 kB/s |  38 kB     00:00    
+(15/243): gnutls-3.8.10-4.el9_8.x86_64.rpm      636 kB/s | 1.4 MB     00:02    
+(16/243): gnupg2-2.3.3-5.el9_7.x86_64.rpm       954 kB/s | 2.5 MB     00:02    
+(17/243): grep-3.6-5.el9.x86_64.rpm             349 kB/s | 257 kB     00:00    
+(18/243): audit-libs-3.1.5-8.el9.x86_64.rpm     313 kB/s | 121 kB     00:00    
+(19/243): groff-base-1.22.4-10.el9.0.1.x86_64.r 1.1 MB/s | 1.1 MB     00:00    
+(20/243): libstdc++-11.5.0-14.el9.x86_64.rpm    2.0 MB/s | 739 kB     00:00    
+(21/243): attr-2.5.1-3.el9.x86_64.rpm            55 kB/s |  58 kB     00:01    
+(22/243): basesystem-11-13.el9.0.1.noarch.rpm    21 kB/s | 6.4 kB     00:00    
+(23/243): gzip-1.12-1.el9.x86_64.rpm            234 kB/s | 157 kB     00:00    
+(24/243): libtasn1-4.16.0-10.el9_8.x86_64.rpm   468 kB/s |  73 kB     00:00    
+(25/243): systemd-libs-252-67.el9_8.4.rocky.0.1 999 kB/s | 654 kB     00:00    
+(26/243): systemd-252-67.el9_8.4.rocky.0.1.x86_ 1.8 MB/s | 4.0 MB     00:02    
+(27/243): ima-evm-utils-1.6.2-2.el9.rocky.0.2.x 134 kB/s |  71 kB     00:00    
+(28/243): python-unversioned-command-3.9.25-7.e  34 kB/s | 9.6 kB     00:00    
+(29/243): bash-5.1.8-9.el9.x86_64.rpm           769 kB/s | 1.7 MB     00:02    
+(30/243): libtool-ltdl-2.4.6-46.el9.x86_64.rpm  140 kB/s |  35 kB     00:00    
+(31/243): systemd-pam-252-67.el9_8.4.rocky.0.1. 852 kB/s | 258 kB     00:00    
+(32/243): bzip2-libs-1.0.8-11.el9.x86_64.rpm    144 kB/s |  39 kB     00:00    
+(33/243): ca-certificates-2025.2.80_v9.0.305-91 2.0 MB/s | 948 kB     00:00    
+(34/243): info-6.7-15.el9.x86_64.rpm            165 kB/s | 224 kB     00:01    
+(35/243): systemd-rpm-macros-252-67.el9_8.4.roc  90 kB/s |  46 kB     00:00    
+(36/243): tar-1.34-11.el9.x86_64.rpm            2.5 MB/s | 877 kB     00:00    
+(37/243): libutempter-1.2.1-6.el9.x86_64.rpm     78 kB/s |  26 kB     00:00    
+(38/243): libuuid-2.37.4-25.el9.x86_64.rpm      184 kB/s |  26 kB     00:00    
+(39/243): libverto-0.3.2-3.el9.x86_64.rpm        57 kB/s |  21 kB     00:00    
+(40/243): libunistring-0.9.10-15.el9.x86_64.rpm 542 kB/s | 495 kB     00:00    
+(41/243): coreutils-8.32-41.el9_8.x86_64.rpm    2.1 MB/s | 1.1 MB     00:00    
+(42/243): libxcrypt-4.4.18-3.el9.x86_64.rpm     269 kB/s | 115 kB     00:00    
+(43/243): coreutils-common-8.32-41.el9_8.x86_64 1.9 MB/s | 2.0 MB     00:01    
+(44/243): tpm2-tss-3.2.3-1.el9.x86_64.rpm       403 kB/s | 594 kB     00:01    
+(45/243): tzdata-2026b-1.el9_8.noarch.rpm       1.2 MB/s | 497 kB     00:00    
+(46/243): cracklib-2.9.6-28.el9.x86_64.rpm      277 kB/s |  80 kB     00:00    
+(47/243): unzip-6.0-60.el9_8.x86_64.rpm         614 kB/s | 180 kB     00:00    
+(48/243): libxml2-2.9.13-14.el9_8.2.x86_64.rpm  1.4 MB/s | 746 kB     00:00    
+(49/243): crypto-policies-20260224-1.gitea0f072 120 kB/s |  56 kB     00:00    
+(50/243): libyaml-0.2.5-7.el9.x86_64.rpm         81 kB/s |  60 kB     00:00    
+(51/243): util-linux-2.37.4-25.el9.x86_64.rpm   2.2 MB/s | 2.2 MB     00:01    
+(52/243): cracklib-dicts-2.9.6-28.el9.x86_64.rp 1.9 MB/s | 3.6 MB     00:01    
+(53/243): util-linux-core-2.37.4-25.el9.x86_64. 1.9 MB/s | 431 kB     00:00    
+(54/243): curl-7.76.1-40.el9.x86_64.rpm         850 kB/s | 292 kB     00:00    
+(55/243): cyrus-sasl-lib-2.1.27-22.el9_7.x86_64 1.5 MB/s | 762 kB     00:00    
+(56/243): libzstd-1.5.5-1.el9.x86_64.rpm        271 kB/s | 294 kB     00:01    
+(57/243): jq-1.6-19.el9_8.2.i686.rpm            669 kB/s | 213 kB     00:00    
+(58/243): dbus-broker-28-8.el9.x86_64.rpm       590 kB/s | 169 kB     00:00    
+(59/243): jq-1.6-19.el9_8.2.x86_64.rpm          270 kB/s | 187 kB     00:00    
+(60/243): dbus-1.12.20-8.el9.x86_64.rpm          11 kB/s | 6.8 kB     00:00    
+(61/243): dbus-common-1.12.20-8.el9.noarch.rpm   52 kB/s |  14 kB     00:00    
+(62/243): json-c-0.14-11.el9.x86_64.rpm         155 kB/s |  42 kB     00:00    
+(63/243): lua-libs-5.4.4-4.el9.x86_64.rpm       442 kB/s | 129 kB     00:00    
+(64/243): lz4-libs-1.9.3-5.el9.x86_64.rpm       227 kB/s |  67 kB     00:00    
+(65/243): xz-libs-5.2.5-8.el9_0.x86_64.rpm      316 kB/s |  92 kB     00:00    
+(66/243): dbus-libs-1.12.20-8.el9.x86_64.rpm    229 kB/s | 151 kB     00:00    
+(67/243): zlib-1.2.11-40.el9.x86_64.rpm         328 kB/s |  90 kB     00:00    
+(68/243): mpfr-4.1.0-10.el9.x86_64.rpm          1.0 MB/s | 324 kB     00:00    
+(69/243): dnf-data-4.14.0-34.el9_8.rocky.0.1.no 125 kB/s |  36 kB     00:00    
+(70/243): dnf-plugins-core-4.3.0-26.el9.noarch. 134 kB/s |  35 kB     00:00    
+(71/243): ncurses-6.2-12.20210508.el9.x86_64.rp 1.0 MB/s | 399 kB     00:00    
+(72/243): ncurses-base-6.2-12.20210508.el9.noar 171 kB/s |  60 kB     00:00    
+(73/243): ncurses-libs-6.2-12.20210508.el9.x86_ 861 kB/s | 322 kB     00:00    
+(74/243): net-tools-2.0-0.64.20160912git.el9.x8 911 kB/s | 294 kB     00:00    
+(75/243): perl-B-1.80-483.el9.x86_64.rpm        585 kB/s | 178 kB     00:00    
+(76/243): perl-AutoLoader-5.74-483.el9.noarch.r  30 kB/s |  20 kB     00:00    
+(77/243): nettle-3.10.1-1.el9.x86_64.rpm        570 kB/s | 562 kB     00:00    
+(78/243): npth-1.6-8.el9.x86_64.rpm              68 kB/s |  24 kB     00:00    
+(79/243): ed-1.14.2-12.el9.x86_64.rpm           260 kB/s |  74 kB     00:00    
+(80/243): git-2.52.0-1.el9.x86_64.rpm           158 kB/s |  39 kB     00:00    
+(81/243): elfutils-default-yama-scope-0.194-1.e  13 kB/s | 9.0 kB     00:00    
+(82/243): elfutils-libelf-0.194-1.el9.rocky.0.1 266 kB/s | 201 kB     00:00    
+(83/243): git-core-doc-2.52.0-1.el9.noarch.rpm  2.2 MB/s | 2.8 MB     00:01    
+(84/243): git-core-2.52.0-1.el9.x86_64.rpm      2.6 MB/s | 5.0 MB     00:01    
+(85/243): elfutils-libs-0.194-1.el9.rocky.0.1.x 429 kB/s | 268 kB     00:00    
+(86/243): libxcrypt-compat-4.4.18-3.el9.x86_64. 144 kB/s |  88 kB     00:00    
+(87/243): oniguruma-6.9.6-1.el9.6.i686.rpm      735 kB/s | 221 kB     00:00    
+(88/243): oniguruma-6.9.6-1.el9.6.x86_64.rpm    690 kB/s | 217 kB     00:00    
+(89/243): perl-Class-Struct-0.66-483.el9.noarch  79 kB/s |  21 kB     00:00    
+(90/243): expat-2.5.0-6.el9_8.1.x86_64.rpm      452 kB/s | 117 kB     00:00    
+(91/243): perl-Carp-1.50-460.el9.0.1.noarch.rpm  42 kB/s |  29 kB     00:00    
+(92/243): file-libs-5.39-17.el9.x86_64.rpm      1.6 MB/s | 587 kB     00:00    
+(93/243): findutils-4.8.0-7.el9.x86_64.rpm      1.4 MB/s | 536 kB     00:00    
+(94/243): rpm-plugin-systemd-inhibit-4.16.1.3-4  62 kB/s |  15 kB     00:00    
+(95/243): openldap-2.6.8-4.el9.0.1.x86_64.rpm   858 kB/s | 256 kB     00:00    
+(96/243): gawk-5.1.0-6.el9.x86_64.rpm           1.7 MB/s | 996 kB     00:00    
+(97/243): perl-Data-Dumper-2.174-462.el9.x86_64  68 kB/s |  55 kB     00:00    
+(98/243): gdbm-libs-1.23-1.el9.x86_64.rpm       217 kB/s |  55 kB     00:00    
+(99/243): openssh-9.9p1-7.el9_8.rocky.0.1.x86_6 1.2 MB/s | 421 kB     00:00    
+(100/243): filesystem-3.16-5.el9.x86_64.rpm     596 kB/s | 1.1 MB     00:01    
+(101/243): openssh-clients-9.9p1-7.el9_8.rocky. 1.9 MB/s | 767 kB     00:00    
+(102/243): perl-Digest-1.19-4.el9.0.1.noarch.rp  28 kB/s |  25 kB     00:00    
+(103/243): glib2-2.68.4-19.el9_8.2.x86_64.rpm   2.7 MB/s | 2.6 MB     00:00    
+(104/243): perl-Digest-MD5-2.58-4.el9.x86_64.rp  89 kB/s |  36 kB     00:00    
+(105/243): perl-DynaLoader-1.47-483.el9.x86_64.  69 kB/s |  24 kB     00:00    
+(106/243): openssl-3.5.5-5.el9_8.x86_64.rpm     633 kB/s | 1.4 MB     00:02    
+(107/243): glibc-2.34-274.el9_8.i686.rpm        2.6 MB/s | 1.9 MB     00:00    
+(108/243): openssl-fips-provider-3.5.5-5.el9_8. 546 kB/s | 813 kB     00:01    
+(109/243): perl-Encode-3.08-462.el9.x86_64.rpm  2.4 MB/s | 1.7 MB     00:00    
+(110/243): glibc-2.34-274.el9_8.x86_64.rpm      1.2 MB/s | 2.0 MB     00:01    
+(111/243): perl-Errno-1.30-483.el9.x86_64.rpm    19 kB/s |  14 kB     00:00    
+(112/243): openssl-libs-3.5.5-5.el9_8.x86_64.rp 1.8 MB/s | 2.3 MB     00:01    
+(113/243): glibc-common-2.34-274.el9_8.x86_64.r 962 kB/s | 299 kB     00:00    
+(114/243): perl-Error-0.17029-7.el9.0.1.noarch.  99 kB/s |  41 kB     00:00    
+(115/243): p11-kit-0.26.2-1.el9.x86_64.rpm      2.3 MB/s | 584 kB     00:00    
+(116/243): perl-Exporter-5.74-461.el9.noarch.rp  70 kB/s |  31 kB     00:00    
+(117/243): p11-kit-trust-0.26.2-1.el9.x86_64.rp 821 kB/s | 155 kB     00:00    
+(118/243): pam-1.5.1-28.el9.x86_64.rpm          1.3 MB/s | 544 kB     00:00    
+(119/243): glibc-gconv-extra-2.34-274.el9_8.x86 2.4 MB/s | 1.5 MB     00:00    
+(120/243): glibc-gconv-extra-2.34-274.el9_8.i68 1.8 MB/s | 1.6 MB     00:00    
+(121/243): perl-Fcntl-1.13-483.el9.x86_64.rpm    36 kB/s |  19 kB     00:00    
+(122/243): pcre-8.44-4.el9.x86_64.rpm           384 kB/s | 196 kB     00:00    
+(123/243): pcre2-10.40-6.el9.x86_64.rpm         724 kB/s | 233 kB     00:00    
+(124/243): pcre2-syntax-10.40-6.el9.noarch.rpm  480 kB/s | 140 kB     00:00    
+(125/243): perl-File-Path-2.18-4.el9.noarch.rpm 136 kB/s |  35 kB     00:00    
+(126/243): perl-File-Basename-2.85-483.el9.noar  23 kB/s |  16 kB     00:00    
+(127/243): perl-File-Temp-0.231.100-4.el9.noarc 197 kB/s |  59 kB     00:00    
+(128/243): perl-File-stat-1.09-483.el9.noarch.r  60 kB/s |  16 kB     00:00    
+(129/243): perl-FileHandle-2.03-483.el9.noarch.  58 kB/s |  14 kB     00:00    
+(130/243): keyutils-1.6.3-1.el9.x86_64.rpm      280 kB/s |  72 kB     00:00    
+(131/243): popt-1.18-8.el9.x86_64.rpm           179 kB/s |  59 kB     00:00    
+(132/243): keyutils-libs-1.6.3-1.el9.x86_64.rpm  85 kB/s |  31 kB     00:00    
+(133/243): perl-Git-2.52.0-1.el9.noarch.rpm      52 kB/s |  37 kB     00:00    
+(134/243): perl-Getopt-Long-2.52-4.el9.noarch.r 120 kB/s |  60 kB     00:00    
+(135/243): perl-Getopt-Std-1.12-483.el9.noarch.  40 kB/s |  14 kB     00:00    
+(136/243): kmod-libs-28-11.el9.x86_64.rpm       218 kB/s |  62 kB     00:00    
+(137/243): krb5-libs-1.21.1-10.el9_8.x86_64.rpm 1.6 MB/s | 754 kB     00:00    
+(138/243): publicsuffix-list-dafsa-20210518-3.e 113 kB/s |  58 kB     00:00    
+(139/243): perl-HTTP-Tiny-0.076-462.el9.noarch.  68 kB/s |  53 kB     00:00    
+(140/243): python3-3.9.25-7.el9_8.2.x86_64.rpm  100 kB/s |  26 kB     00:00    
+(141/243): perl-IO-1.43-483.el9.x86_64.rpm      297 kB/s |  85 kB     00:00    
+(142/243): python3-dateutil-2.9.0.post0-1.el9_7 774 kB/s | 290 kB     00:00    
+(143/243): perl-IO-Socket-IP-0.41-5.el9.noarch. 164 kB/s |  42 kB     00:00    
+(144/243): python3-dbus-1.2.18-2.el9.0.1.x86_64 267 kB/s | 131 kB     00:00    
+(145/243): python3-dnf-4.14.0-34.el9_8.rocky.0. 1.2 MB/s | 412 kB     00:00    
+(146/243): perl-IO-Socket-SSL-2.073-2.el9.noarc 619 kB/s | 214 kB     00:00    
+(147/243): perl-IPC-Open3-1.21-483.el9.noarch.r  54 kB/s |  22 kB     00:00    
+(148/243): less-590-6.el9.x86_64.rpm            546 kB/s | 160 kB     00:00    
+(149/243): python3-dnf-plugins-core-4.3.0-26.el 330 kB/s | 245 kB     00:00    
+(150/243): libacl-2.4.0-1.el9_8.x86_64.rpm       37 kB/s |  25 kB     00:00    
+(151/243): python3-hawkey-0.69.0-18.el9.rocky.0 385 kB/s | 101 kB     00:00    
+(152/243): python3-gpg-1.15.1-6.el9.x86_64.rpm  327 kB/s | 261 kB     00:00    
+(153/243): libarchive-3.5.3-9.el9_7.x86_64.rpm  1.0 MB/s | 387 kB     00:00    
+(154/243): libassuan-2.5.5-3.el9.x86_64.rpm     208 kB/s |  67 kB     00:00    
+(155/243): perl-MIME-Base64-3.16-4.el9.x86_64.r  95 kB/s |  30 kB     00:00    
+(156/243): python3-libcomps-0.1.18-1.el9.x86_64 168 kB/s |  48 kB     00:00    
+(157/243): libblkid-2.37.4-25.el9.x86_64.rpm    668 kB/s | 105 kB     00:00    
+(158/243): python3-libdnf-0.69.0-18.el9.rocky.0 1.6 MB/s | 771 kB     00:00    
+(159/243): libbrotli-1.0.9-9.el9_7.x86_64.rpm   734 kB/s | 312 kB     00:00    
+(160/243): libattr-2.5.1-3.el9.x86_64.rpm        22 kB/s |  18 kB     00:00    
+(161/243): libcap-2.48-10.el9_7.1.x86_64.rpm    243 kB/s |  66 kB     00:00    
+(162/243): libcbor-0.7.0-5.el9.x86_64.rpm       115 kB/s |  56 kB     00:00    
+(163/243): libcap-ng-0.8.2-7.el9.x86_64.rpm      33 kB/s |  32 kB     00:00    
+(164/243): libcom_err-1.46.5-8.el9.x86_64.rpm    33 kB/s |  25 kB     00:00    
+(165/243): perl-Mozilla-CA-20200520-6.el9.noarc  17 kB/s |  12 kB     00:00    
+(166/243): libcomps-0.1.18-1.el9.x86_64.rpm     200 kB/s |  77 kB     00:00    
+(167/243): python3-libs-3.9.25-7.el9_8.2.x86_64 3.6 MB/s | 7.5 MB     00:02    
+(168/243): perl-NDBM_File-1.15-483.el9.x86_64.r  83 kB/s |  21 kB     00:00    
+(169/243): python3-pip-wheel-21.3.1-2.el9_8.roc 1.3 MB/s | 1.1 MB     00:00    
+(170/243): perl-Net-SSLeay-1.94-3.el9.x86_64.rp 827 kB/s | 391 kB     00:00    
+(171/243): libcurl-7.76.1-40.el9.x86_64.rpm     405 kB/s | 283 kB     00:00    
+(172/243): python3-rpm-4.16.1.3-40.el9.x86_64.r 231 kB/s |  64 kB     00:00    
+(173/243): libdnf-0.69.0-18.el9.rocky.0.1.x86_6 1.5 MB/s | 654 kB     00:00    
+(174/243): libeconf-0.4.1-7.el9_8.x86_64.rpm    104 kB/s |  26 kB     00:00    
+(175/243): libdb-5.3.28-57.el9_6.x86_64.rpm     702 kB/s | 736 kB     00:01    
+(176/243): perl-POSIX-1.94-483.el9.x86_64.rpm   102 kB/s |  95 kB     00:00    
+(177/243): libedit-3.1-39.20210216cvs.el9.x86_6 706 kB/s | 103 kB     00:00    
+(178/243): python3-setuptools-wheel-53.0.0-15.e 520 kB/s | 467 kB     00:00    
+(179/243): python3-six-1.15.0-9.el9.noarch.rpm   48 kB/s |  36 kB     00:00    
+(180/243): perl-Pod-Escapes-1.07-460.el9.0.1.no  64 kB/s |  20 kB     00:00    
+(181/243): perl-PathTools-3.78-461.el9.x86_64.r 102 kB/s |  85 kB     00:00    
+(182/243): perl-Pod-Perldoc-3.28.01-461.el9.noa 322 kB/s |  83 kB     00:00    
+(183/243): libfdisk-2.37.4-25.el9.x86_64.rpm    991 kB/s | 152 kB     00:00    
+(184/243): libffi-3.4.2-8.el9.x86_64.rpm        140 kB/s |  37 kB     00:00    
+(185/243): libevent-2.1.12-8.el9_4.x86_64.rpm   253 kB/s | 262 kB     00:01    
+(186/243): python3-systemd-234-19.el9.x86_64.rp 159 kB/s |  82 kB     00:00    
+(187/243): perl-Pod-Usage-2.01-4.el9.noarch.rpm 154 kB/s |  40 kB     00:00    
+(188/243): libfido2-1.13.0-2.el9.x86_64.rpm     204 kB/s |  97 kB     00:00    
+(189/243): perl-Scalar-List-Utils-1.56-462.el9. 118 kB/s |  70 kB     00:00    
+(190/243): perl-Pod-Simple-3.42-4.el9.noarch.rp 187 kB/s | 215 kB     00:01    
+(191/243): libgcc-11.5.0-14.el9.x86_64.rpm      587 kB/s |  85 kB     00:00    
+(192/243): perl-SelectSaver-1.02-483.el9.noarch  39 kB/s |  10 kB     00:00    
+(193/243): libgcrypt-1.10.0-11.el9.x86_64.rpm   1.4 MB/s | 507 kB     00:00    
+(194/243): libgcc-11.5.0-14.el9.i686.rpm        102 kB/s |  94 kB     00:00    
+(195/243): perl-Storable-3.21-460.el9.x86_64.rp 354 kB/s |  95 kB     00:00    
+(196/243): libgomp-11.5.0-14.el9.x86_64.rpm     1.4 MB/s | 258 kB     00:00    
+(197/243): perl-Symbol-1.08-483.el9.noarch.rpm   47 kB/s |  13 kB     00:00    
+(198/243): perl-Socket-2.031-4.el9.x86_64.rpm    62 kB/s |  54 kB     00:00    
+(199/243): readline-8.1-4.el9.x86_64.rpm        222 kB/s | 210 kB     00:00    
+(200/243): perl-Term-ANSIColor-5.01-461.el9.0.1 190 kB/s |  48 kB     00:00    
+(201/243): rocky-gpg-keys-9.8-1.1.el9.noarch.rp  48 kB/s |  12 kB     00:00    
+(202/243): perl-Term-Cap-1.17-460.el9.0.1.noarc  54 kB/s |  22 kB     00:00    
+(203/243): libgpg-error-1.42-5.el9.x86_64.rpm   303 kB/s | 211 kB     00:00    
+(204/243): rocky-release-9.8-1.1.el9.noarch.rpm  90 kB/s |  22 kB     00:00    
+(205/243): rocky-repos-9.8-1.1.el9.noarch.rpm    50 kB/s |  12 kB     00:00    
+(206/243): rpm-build-libs-4.16.1.3-40.el9.x86_6 310 kB/s |  88 kB     00:00    
+(207/243): rpm-4.16.1.3-40.el9.x86_64.rpm       756 kB/s | 484 kB     00:00    
+(208/243): perl-TermReadKey-2.38-11.el9.x86_64. 137 kB/s |  36 kB     00:00    
+(209/243): rpm-libs-4.16.1.3-40.el9.x86_64.rpm  909 kB/s | 307 kB     00:00    
+(210/243): libidn2-2.3.0-7.el9.x86_64.rpm       107 kB/s |  95 kB     00:00    
+(211/243): perl-Text-ParseWords-3.30-460.el9.no  61 kB/s |  16 kB     00:00    
+(212/243): perl-Text-Tabs+Wrap-2013.0523-460.el  77 kB/s |  23 kB     00:00    
+(213/243): perl-Time-Local-1.300-7.el9.noarch.r 131 kB/s |  33 kB     00:00    
+(214/243): rpm-sign-libs-4.16.1.3-40.el9.x86_64  30 kB/s |  20 kB     00:00    
+(215/243): perl-URI-5.09-3.el9.0.1.noarch.rpm   440 kB/s | 124 kB     00:00    
+(216/243): libmodulemd-2.13.0-2.el9.x86_64.rpm  746 kB/s | 231 kB     00:00    
+(217/243): libmount-2.37.4-25.el9.x86_64.rpm    886 kB/s | 133 kB     00:00    
+(218/243): libksba-1.5.1-7.el9.x86_64.rpm       147 kB/s | 152 kB     00:01    
+(219/243): libnghttp2-1.43.0-6.el9_7.1.x86_64.r 460 kB/s |  72 kB     00:00    
+(220/243): perl-base-2.27-483.el9.noarch.rpm     37 kB/s |  15 kB     00:00    
+(221/243): gawk-all-langpacks-5.1.0-6.el9.x86_6 633 kB/s | 206 kB     00:00    
+(222/243): perl-constant-1.33-461.el9.0.1.noarc  54 kB/s |  23 kB     00:00    
+(223/243): sed-4.8-10.el9_8.x86_64.rpm          963 kB/s | 295 kB     00:00    
+(224/243): perl-interpreter-5.32.1-483.el9.x86_ 222 kB/s |  70 kB     00:00    
+(225/243): perl-if-0.60.800-483.el9.noarch.rpm   22 kB/s |  13 kB     00:00    
+(226/243): perl-libnet-3.13-4.el9.noarch.rpm    463 kB/s | 125 kB     00:00    
+(227/243): perl-mro-1.23-483.el9.x86_64.rpm      73 kB/s |  27 kB     00:00    
+(228/243): perl-lib-0.65-483.el9.x86_64.rpm      20 kB/s |  14 kB     00:00    
+(229/243): perl-overload-1.31-483.el9.noarch.rp 171 kB/s |  44 kB     00:00    
+(230/243): perl-overloading-0.02-483.el9.noarch  43 kB/s |  12 kB     00:00    
+(231/243): setup-2.13.7-10.el9.noarch.rpm       227 kB/s | 140 kB     00:00    
+(232/243): perl-parent-0.238-460.el9.noarch.rpm  34 kB/s |  14 kB     00:00    
+(233/243): libpsl-0.21.1-5.el9.x86_64.rpm       182 kB/s |  63 kB     00:00    
+(234/243): libpwquality-1.4.4-8.el9.x86_64.rpm  361 kB/s | 105 kB     00:00    
+(235/243): shadow-utils-4.9-16.el9.x86_64.rpm   1.8 MB/s | 1.1 MB     00:00    
+(236/243): perl-podlators-4.14-460.el9.0.1.noar 348 kB/s | 117 kB     00:00    
+(237/243): perl-vars-1.05-483.el9.noarch.rpm     44 kB/s |  12 kB     00:00    
+(238/243): perl-subs-1.03-483.el9.noarch.rpm     36 kB/s |  10 kB     00:00    
+(239/243): librepo-1.19.0-1.el9.x86_64.rpm      426 kB/s |  89 kB     00:00    
+(240/243): perl-libs-5.32.1-483.el9.x86_64.rpm  798 kB/s | 2.0 MB     00:02    
+(241/243): sqlite-libs-3.34.1-10.el9_8.x86_64.r 1.3 MB/s | 643 kB     00:00    
+(242/243): libreport-filesystem-2.15.2-6.el9.ro  42 kB/s |  11 kB     00:00    
+(243/243): libseccomp-2.5.2-2.el9.x86_64.rpm    131 kB/s |  71 kB     00:00    
+[2026-07-24 01:58:05] PASS  Staged 243 RPMs (93M)
+[2026-07-24 01:58:05] STEP  Downloading Rocky signing key from https://dl.rockylinux.org/pub/rocky/9/BaseOS/x86_64/os/RPM-GPG-KEY-Rocky-9
+[2026-07-24 01:58:09] PASS  Rocky signing key fingerprint verified: 21CB256AE16FC54C6E652949702D426D350D275D
+error: can't create transaction lock on /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/rpmdb/.rpm.lock (No such file or directory)
+[2026-07-24 01:58:09] FAIL  Unexpected error in phase '3) Full dependency-closure download' at line 624
+[2026-07-24 01:58:09] FAIL  Command: rpm --dbpath "$RPMDB_DIR" --initdb
+[2026-07-24 01:58:09] FAIL  Exit code: 255
+RepoInfra Mailcow Repository Rebuild v1.1.1
+Run ID: 20260724-015140-6151
+Overall status: FAIL
+PASS: 13
+WARN: 0
+FAIL: 3
+Elapsed: 389 seconds
+Rocky source: https://dl.rockylinux.org/pub/rocky/9
+Target Git version-release: 2.52.0-1.el9
+Rocky key fingerprint: 21CB256AE16FC54C6E652949702D426D350D275D
+Canonical repo: /srv/repo/rpms/mailcow
+Detail log: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/detail.log
+Report: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/report.txt
+Package manifest: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/package-manifest.tsv
+Closure report: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/repoclosure.txt
+Client repo file: /var/log/repoinfra/mailcow-repo-rebuild/20260724-015140-6151/linuxinfra-mailcow.repo
+Rollback status: not-needed
+[2026-07-24 01:58:09] WARN  Staging retained for diagnosis: /var/tmp/repoinfra-mailcow-repo-rebuild/20260724-015140-6151
