@@ -1,0 +1,148 @@
+Setup Brand New Rocky Linux 9.7 (tested with 9.7) 
+
+Configure the basic infrastructure:
+
+Stage1:
+LinuxInfra-v0.7.2.zip
+
+Stage2:
+repoinfra-mailcow-repo-rebuild-1.1.1.tar.gz
+
+Stage 3:
+
+sha256sum -c repoinfra-mailcow-complete-offline-annex-1.0.0.tar.gz.sha256
+repoinfra-mailcow-complete-offline-annex-1.0.0.tar.gz: OK
+
+tar -xzvf repoinfra-mailcow-complete-offline-annex-1.0.0.tar.gz
+cd repoinfra-mailcow-complete-offline-annex-1.0.0
+Run the package self-check:
+bash ./bin/package-self-check.sh
+if it passes only we are proceeding next:
+
+Run Plan Only Validation :
+sudo bash ./run.sh --dry-run
+
+Then do - execution
+sudo bash ./run.sh
+
+Published layout
+After success, the Repo VM will contain:
+
+/srv/repo/rpms/docker-ce/releases/<docker-set-id>/
+/srv/repo/rpms/docker-ce/current
+
+/srv/repo/images/mailcow/releases/<bundle-id>/
+/srv/repo/images/mailcow/current
+
+/srv/repo/manifests/mailcow/releases/<bundle-id>/
+/srv/repo/manifests/mailcow/current
+/srv/repo/manifests/mailcow/LATEST
+
+The stage-two Apache aliases already expose:
+
+/rpms
+/images
+/manifests
+
+Repo VM acceptance checks
+
+cat /srv/repo/manifests/mailcow/LATEST
+Then verify the Docker RPM repository:
+curl -fsS \
+  http://127.0.0.1/rpms/docker-ce/current/repodata/repomd.xml \
+  >/dev/null &&
+echo "PASS: Docker CE repository"
+
+Verify the complete Mailcow artifact manifest:
+
+curl -fsS \
+  http://127.0.0.1/manifests/mailcow/current/artifact-manifest.json |
+jq .
+
+Verify remote access through the Repo VM DNS name:
+
+curl -fsS \
+  http://repo.corp.local/manifests/mailcow/current/artifact-manifest.json |
+jq .
+
+Verify the generated client installer:
+
+curl -fsSI \
+  http://repo.corp.local/manifests/mailcow/current/install-mailcow-offline.sh
+
+
+What happens during future Mail Server builds
+
+A future mail1 will:
+
+Obtain Docker CE RPMs from the Repo VM.
+Obtain the pinned Mailcow source archive from the Repo VM.
+Obtain the compressed image bundle over the LAN.
+Verify all SHA-256 checksums.
+Install Docker without using the public Docker repository.
+Load all Mailcow images locally.
+Verify every image ID.
+Generate mailcow.conf.
+Start Mailcow with public image pulls disabled.
+
+The generated installer will be available at:
+http://repo.corp.local/manifests/mailcow/current/install-mailcow-offline.sh
+
+A typical future Mail VM command will be:
+ curl -fsSLo install-mailcow-offline.sh \
+  http://repo.corp.local/manifests/mailcow/current/install-mailcow-offline.sh
+
+chmod +x install-mailcow-offline.sh
+
+sudo bash ./install-mailcow-offline.sh \
+  --hostname mail1.internal.local \
+  --timezone Asia/Kolkata \
+  --disable-firewalld \
+  --start
+
+Expected time benefit
+
+The first stage-three build will still take time because the Repo VM must download everything once.
+
+After that:
+
+Public Internet image download       Eliminated on new Mail VMs
+Public GitHub source download        Eliminated on new Mail VMs
+Public Docker RPM download           Eliminated on new Mail VMs
+Repeated container registry pulls    Eliminated
+Transfer source                       Repo VM → Mail VM over LAN
+Transfer image bundle                 Repo VM → Mail VM over LAN
+Docker image loading                  Still required locally
+
+The image bundle may still be several gigabytes, so LAN transfer and docker image load will take some time. However, deployment becomes predictable and no longer depends on Docker Hub/GHCR speed, rate limits, Internet latency, or repeated downloads.
+
+Storage recommendation
+
+The package enforces minimum free-space gates of:
+
+Repository/staging space : 24 GiB
+Docker data space        : 16 GiB
+
+When /srv/repo and /var/lib/docker are on the same filesystem, those requirements effectively combine. For retained releases and safe staging, provision approximately:
+
+60–80 GiB free space or more
+
+Validation status
+
+The sealed package passed:
+
+43 package integrity and static checks
+Bash syntax validation
+Archive path-traversal validation
+Clean extraction and byte-for-byte comparison
+Plan-mode simulation
+Stage-only simulation
+Successful immutable publication simulation
+Automatic rollback after HTTP failure
+Stop-before-publication after dependency failure
+Image-pull retry and failure handling
+Simulated Mail Server installation using only Repo VM artifacts
+Verification that Compose uses --pull never
+Verification that no client public-registry pull occurs
+
+
