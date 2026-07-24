@@ -1,0 +1,132 @@
+Authoritative Repo VM workflow
+Stage 1 — Build the Rocky Linux foundation
+
+Start with:
+
+Fresh Rocky Linux 9 Server with GUI
+Good Internet connectivity
+Static or temporary working network
+Adequate disk space
+
+Then run:
+
+LinuxInfra-v0.7.2.zip
+
+Select the:
+
+Repo Server role
+
+This stage prepares:
+
+Hostname, IP address, gateway and DNS
+Timezone and NTP
+Base operating-system packages
+Firewall
+SELinux
+Docker Engine and Docker Compose
+Repo VM base infrastructure
+
+After LinuxInfra reports success, reboot once:
+
+sudo reboot
+
+Then confirm:
+
+hostnamectl
+ip -br address
+getenforce
+systemctl is-active firewalld
+systemctl is-active docker
+docker version
+docker compose version
+Stage 2 — Build the Mailcow prerequisite RPM repositories
+
+Run:
+
+repoinfra-mailcow-repo-rebuild-1.1.1.tar.gz
+
+The order should be:
+
+bash ./bin/package-self-check.sh
+sudo bash ./run.sh --dry-run
+sudo bash ./run.sh
+
+This stage prepares:
+
+Apache repository service
+/rpms/base
+/rpms/mailcow
+Mailcow host prerequisite RPMs
+Complete Git dependency chain
+Repository metadata
+SELinux labels for repository content
+HTTP publication
+Client repository definition
+Rollback information
+
+However, you reported three failures in this package. Therefore:
+
+Do not proceed to Stage 3 until we review those three failures and Stage 2 completes with Overall status: PASS.
+
+Stage 3 depends on the directories, Apache aliases and repository structure created by Stage 2.
+
+Stage 3 — Build the complete offline Mailcow annex
+
+After Stage 2 passes, run:
+
+repoinfra-mailcow-complete-offline-annex-1.0.0.tar.gz
+
+Again use:
+
+bash ./bin/package-self-check.sh
+sudo bash ./run.sh --dry-run
+sudo bash ./run.sh
+
+This stage adds:
+
+Docker CE offline RPM repository
+Docker Compose and related RPMs
+Exact Mailcow source bundle
+All Mailcow container images
+Compressed image archive
+Container image manifests
+Image IDs, tags and digests
+SHA-256 checksums
+Offline Mail Server installation script
+Versioned /images and /manifests publication
+
+After this stage passes, the Repo VM will be ready for a new Mail Server VM to install Mailcow without downloading the large container images from the Internet.
+
+Final sequence
+Fresh Rocky Linux Repo VM
+        ↓
+LinuxInfra v0.7.2 — Repo Server role
+        ↓
+Reboot and verify base VM
+        ↓
+RepoInfra Mailcow Repo Rebuild 1.1.1
+        ↓
+Must finish with PASS
+        ↓
+RepoInfra Mailcow Complete Offline Annex 1.0.0
+        ↓
+Must finish with PASS
+        ↓
+Repo VM ready for repeat offline Mailcow deployments
+Packages not to use in this clean workflow
+
+Do not mix in the earlier experimental packages or scripts:
+
+mailcow-repo-annex.sh
+annex-repo-fix.sh
+annex-repo-fix-package-v2
+repoinfra-mailcow-repo-rebuild-1.0.0
+repoinfra-mailcow-repo-rebuild-1.1.0
+
+The intended package set is only:
+
+1. LinuxInfra-v0.7.2.zip
+2. repoinfra-mailcow-repo-rebuild-1.1.1.tar.gz
+3. repoinfra-mailcow-complete-offline-annex-1.0.0.tar.gz
+
+So your understanding is correct, with one important gate: we must resolve the three Stage 2 failures before you run Stage 3.
