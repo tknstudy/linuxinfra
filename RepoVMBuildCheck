@@ -1,0 +1,433 @@
+Repo VM Build CheckS
+
+
+We should not depend on a long checklist of manual commands after each stage. Each stage should have an automated build verifier that produces a clear GO / NO-GO decision.
+
+Final package structure
+Stage 2
+
+The corrected Stage 2 package will contain:
+
+repoinfra-mailcow-repo-rebuild-<version>/
+├── run.sh
+├── build-and-verify.sh
+├── verify-build.sh
+├── bin/
+├── config/
+├── README.md
+└── CHANGELOG.md
+
+Normal execution will be one command:
+
+sudo bash ./build-and-verify.sh
+
+That command will automatically:
+
+Package self-check
+        ↓
+Pre-build validation
+        ↓
+Repository build
+        ↓
+Post-build verification
+        ↓
+GO / NO-GO decision
+
+The standalone verifier will also remain available:
+
+sudo bash ./verify-build.sh
+
+That allows verification to be rerun later without rebuilding the repository.
+
+Stage 3
+
+The Stage 3 package will use the same structure:
+
+repoinfra-mailcow-complete-offline-annex-<version>/
+├── run.sh
+├── build-and-verify.sh
+├── verify-build.sh
+├── bin/
+├── config/
+├── README.md
+└── CHANGELOG.md
+
+Normal execution:
+
+sudo bash ./build-and-verify.sh
+
+Standalone re-verification:
+
+sudo bash ./verify-build.sh
+Stage 2 verification scope
+
+The Stage 2 verifier will automatically check:
+
+System and service checks
+Rocky Linux 9 x86_64
+Required tools installed
+Apache enabled and active
+Apache configuration syntax valid
+Firewalld permits HTTP when active
+SELinux remains Enforcing
+Repository SELinux labels are correct
+Repository structure
+/srv/repo/rpms/base
+/srv/repo/rpms/mailcow
+/srv/repo/rpms/base/repodata/repomd.xml
+/srv/repo/rpms/mailcow/repodata/repomd.xml
+Git dependency-set validation
+
+It will verify that matching versions exist for:
+
+git
+git-core
+git-core-doc
+perl-Git
+
+It will reject a repository containing, for example:
+
+git             2.52.0
+git-core        missing
+git-core-doc    missing
+perl-Git        missing
+
+It will also reject mismatched package versions.
+
+RPM integrity and signatures
+
+It will check:
+
+RPM file integrity
+Rocky RPM signatures
+Repository metadata readability
+SHA-256 manifest consistency
+Dependency closure
+
+It will run repository closure checks and fail when unresolved dependencies remain.
+
+The validation will cover the complete Mailcow host-prerequisite package set, not only Git.
+
+Clean-client simulation
+
+This is the most important test.
+
+The verifier will create a temporary DNF installation root and attempt to install the required packages using only:
+
+http://127.0.0.1/rpms/base/
+http://127.0.0.1/rpms/mailcow/
+
+All public repositories will be disabled.
+
+Conceptually, it will perform:
+
+dnf \
+  --installroot <temporary-root> \
+  --disablerepo='*' \
+  --enablerepo=linuxinfra-base,linuxinfra-mailcow \
+  install <required-packages>
+
+This proves that a fresh Mail Server VM can resolve and install the packages using only the Repo VM.
+
+HTTP tests
+
+The verifier will test:
+
+Local HTTP access
+Repo VM hostname access
+Repo VM IP access
+Repository metadata
+Rocky signing key
+Generated client repository file
+Stage 2 final result
+
+Successful output:
+
+============================================================
+ STAGE 2 REPOSITORY BUILD VERIFICATION
+============================================================
+
+PASS : 34
+WARN : 0
+FAIL : 0
+
+Dependency closure       : PASS
+Git package set          : PASS
+RPM signatures           : PASS
+Apache publication       : PASS
+SELinux labels           : PASS
+Clean-client simulation  : PASS
+Rollback availability    : PASS
+
+DECISION: GO
+
+Stage 2 is verified.
+It is safe to proceed to Stage 3.
+
+Failed output:
+
+PASS : 30
+WARN : 1
+FAIL : 3
+
+DECISION: NO-GO
+
+Do not proceed to Stage 3.
+
+Blocking failures:
+  R2-GIT-003  Missing git-core-doc-2.52.0-1.el9
+  R2-GIT-004  Missing perl-Git-2.52.0-1.el9
+  R2-DNF-002  Clean-client installation failed
+
+Recommended action:
+  Review the detailed remediation report.
+Stage 3 verification scope
+
+The Stage 3 verifier will first require a successful Stage 2 verification.
+
+If Stage 2 is not valid, Stage 3 immediately stops:
+
+DECISION: NO-GO
+
+Reason:
+Stage 2 prerequisite repository has not passed verification.
+
+It will then validate the following.
+
+Docker RPM repository
+
+The verifier will check:
+
+docker-ce
+docker-ce-cli
+containerd.io
+docker-buildx-plugin
+docker-compose-plugin
+Complete RPM dependency closure
+RPM signatures
+Repository metadata
+
+It will use another clean temporary DNF root to prove Docker can be installed using only the Repo VM.
+
+Mailcow source bundle
+
+It will verify:
+
+Source archive exists
+Source archive is readable
+SHA-256 matches
+Pinned Git commit matches the manifest
+Pinned release matches the manifest
+docker-compose.yml exists
+Required Mailcow scripts exist
+Container image completeness
+
+The verifier will parse the pinned Mailcow Compose configuration and obtain the complete expected image list.
+
+It will compare that list against the published image manifest:
+
+Compose image list
+        versus
+Published image list
+        versus
+Saved image archive
+
+It will fail on:
+
+Missing image
+Unexpected image
+Wrong tag
+Wrong image ID
+Manifest mismatch
+Duplicate image entry
+Unreadable image archive
+Image bundle validation
+
+The package will test:
+
+zstd archive integrity
+Archive readability
+Bundle SHA-256
+Manifest SHA-256
+Image count
+Image tags
+Image IDs
+Registry digests, when available
+
+For deep verification, it will use an isolated temporary Docker data root and socket, rather than altering the Repo VM’s normal Docker image store.
+
+The isolated test will:
+
+Start temporary Docker daemon
+Load the Mailcow bundle
+Verify every expected image and tag
+Run docker compose config
+Confirm every Compose image exists locally
+Stop temporary Docker daemon
+Remove temporary validation data
+
+No public image pull will be permitted during this test.
+
+Offline-installer simulation
+
+The verifier will test the generated Mail Server installer in validation mode.
+
+It will confirm that the installer:
+
+Uses Repo VM HTTP URLs
+Uses the local Docker RPM repository
+Uses the local Mailcow source archive
+Uses the local image bundle
+Verifies SHA-256 checksums
+Loads images locally
+Uses docker compose --pull never
+Does not configure public Docker repositories
+Does not call docker pull
+Publication checks
+
+It will verify:
+
+/rpms/docker-ce/current
+/images/mailcow/current
+/manifests/mailcow/current
+/manifests/mailcow/LATEST
+
+It will also confirm that every current link resolves to a valid immutable release directory.
+
+Stage 3 final result
+
+Successful output:
+
+============================================================
+ STAGE 3 COMPLETE OFFLINE ANNEX VERIFICATION
+============================================================
+
+PASS : 48
+WARN : 0
+FAIL : 0
+
+Stage 2 prerequisite      : PASS
+Docker RPM closure        : PASS
+Mailcow source            : PASS
+Compose image inventory   : PASS
+Image archive integrity   : PASS
+Temporary image load      : PASS
+Offline installer         : PASS
+HTTP publication          : PASS
+
+DECISION: GO
+
+REPO VM STATUS:
+READY FOR OFFLINE MAILCOW DEPLOYMENT
+
+Failed output:
+
+PASS : 43
+WARN : 1
+FAIL : 2
+
+DECISION: NO-GO
+
+The Repo VM is not ready for a Mail Server deployment.
+
+Blocking failures:
+  R3-IMG-006  Missing image: mariadb:10.11
+  R3-HTTP-004 Image archive is not accessible through /images
+
+Recommended action:
+  Rerun Stage 3 after correcting the reported artifacts.
+Logs and remediation reports
+
+Each verifier will create a timestamped run directory.
+
+Stage 2:
+
+/var/log/repoinfra/mailcow-stage2-verify/<timestamp>/
+
+Stage 3:
+
+/var/log/repoinfra/mailcow-stage3-verify/<timestamp>/
+
+Each directory will contain:
+
+detail.log
+summary.txt
+report.txt
+failures.txt
+warnings.txt
+remediation.txt
+verification-results.tsv
+verification-results.json
+
+The most useful file will be:
+
+remediation.txt
+
+Example:
+
+Failure ID:
+R2-GIT-003
+
+Problem:
+git-core-doc version 2.52.0-1.el9 is absent.
+
+Impact:
+A clean Mail Server VM cannot install git from the Repo VM.
+
+Required correction:
+Rebuild the Git dependency closure from Rocky AppStream and regenerate
+the base and Mailcow repository metadata.
+
+Proceed to next stage:
+NO
+Exit codes
+
+The verifier will return machine-readable exit codes:
+
+0 = GO
+1 = NO-GO because verification failed
+2 = Verifier itself could not execute
+3 = GO with non-blocking warnings
+
+This means the build wrapper can automatically stop the process:
+
+sudo bash ./verify-build.sh || exit 1
+
+Stage 3 will never start automatically after a Stage 2 failure.
+
+Final automated process
+
+The completed Repo VM workflow will become:
+
+Stage 1:
+Run LinuxInfra v0.7.2
+        ↓
+LinuxInfra reports SUCCESS
+        ↓
+Reboot
+
+Stage 2:
+sudo bash ./build-and-verify.sh
+        ↓
+GO     → Stage 3 allowed
+NO-GO  → Stop and review remediation.txt
+
+Stage 3:
+sudo bash ./build-and-verify.sh
+        ↓
+GO     → Repo VM ready for Mail Server deployment
+NO-GO  → Stop and review remediation.txt
+
+Later, after both individual stages are stable, we can add one final read-only command:
+
+sudo bash ./verify-repo-vm-readiness.sh
+
+Its final output will be only one of these:
+
+REPO VM READINESS: GO
+Ready for offline Mailcow deployment.
+
+or:
+
+REPO VM READINESS: NO-GO
+Review the listed blocking failures before building mail1.
